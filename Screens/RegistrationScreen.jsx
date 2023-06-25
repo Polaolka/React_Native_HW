@@ -1,16 +1,16 @@
 import React, { useEffect, useState, useDispatch } from "react";
 import {
-  StyleSheet,
   Text,
-  Image,
   View,
-  FlatList,
   ImageBackground,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { styles } from "./Auth.styles";
 import { AntDesign } from "@expo/vector-icons";
+import { showMessage } from "react-native-flash-message";
 
 export default function RegistrationScreen() {
   const [isFocusedLogin, setIsFocusedLogin] = useState(false);
@@ -53,7 +53,22 @@ export default function RegistrationScreen() {
   };
   const [formData, setFormData] = useState(initialState);
 
+  const handlePress = () => {
+    console.log(formData);
+    setFormData(initialState);
+    showMessage({
+      message: "success",
+      description: `Логін: ${formData.login}, Email: ${formData.email}, Пароль: ${formData.password}`,
+      type: "info",
+      duration: 2000,
+      backgroundColor: "#6CB0F3",
+      color: "white",
+    });
+  }
+
+
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={styles.container}>
       <ImageBackground
         source={require("../assets/Photo_BG.jpg")}
@@ -161,9 +176,7 @@ export default function RegistrationScreen() {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => {
-              // Обробка натискання кнопки
-            }}
+            onPress={handlePress}
           >
             <Text style={styles.buttonText}>Зареєстуватися</Text>
           </TouchableOpacity>
@@ -172,5 +185,6 @@ export default function RegistrationScreen() {
         </View>
       </ImageBackground>
     </View>
+    </TouchableWithoutFeedback>
   );
 }

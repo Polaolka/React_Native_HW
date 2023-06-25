@@ -1,6 +1,17 @@
 import React, { useEffect, useState, useDispatch } from "react";
-import { StyleSheet, Text, Image, View, FlatList, ImageBackground, TextInput, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  ImageBackground,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { styles } from "./Auth.styles";
+import { showMessage } from "react-native-flash-message";
 
 export default function LoginScreen({}) {
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
@@ -34,7 +45,21 @@ export default function LoginScreen({}) {
   };
   const [formData, setFormData] = useState(initialState);
 
+  const handlePress = () => {
+    console.log(formData);
+    setFormData(initialState);
+    showMessage({
+      message: "success",
+      description: `Email: ${formData.email}, Пароль: ${formData.password}`,
+      type: "info",
+      duration: 2000,
+      backgroundColor: "#6CB0F3",
+      color: "white",
+    });
+  }
+
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={styles.container}>
       <ImageBackground
         source={require("../assets/Photo_BG.jpg")}
@@ -74,7 +99,10 @@ export default function LoginScreen({}) {
               isFocusedPassword && styles.inputContainerActive,
             ]}
           >
-            <TouchableOpacity style={styles.placeholderPassBtn} onPress={toggleShowPassword}>
+            <TouchableOpacity
+              style={styles.placeholderPassBtn}
+              onPress={toggleShowPassword}
+            >
               <Text style={styles.placeholderTextPass}>
                 {showPassword ? "Сховати" : "Показати"}
               </Text>
@@ -94,24 +122,27 @@ export default function LoginScreen({}) {
               style={[styles.input, isFocusedPassword && styles.inputFocused]}
               onFocus={handleFocusPassword}
               onBlur={handleBlurPassword}
-              onChangeText={(text) => setFormData({ ...formData, password: text })}
+              onChangeText={(text) =>
+                setFormData({ ...formData, password: text })
+              }
               value={formData.password}
-              secureTextEntry={!showPassword} 
+              secureTextEntry={!showPassword}
             />
           </View>
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => {
-              // Обробка натискання кнопки
-            }}
+            onPress={handlePress}
           >
-            <Text style={styles.buttonText}>Зареєстуватися</Text>
+            <Text 
+            style={styles.buttonText}
+            >Увійти</Text>
           </TouchableOpacity>
 
           <Text style={styles.navigate}>Вже є акаунт? Увійти</Text>
         </View>
       </ImageBackground>
     </View>
+    </TouchableWithoutFeedback>
   );
 }

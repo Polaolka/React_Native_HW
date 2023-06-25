@@ -9,6 +9,7 @@ import LoginScreen from "./Screens/LoginScreen";
 import RegistrationScreen from "./Screens/RegistrationScreen";
 import PostsScreen from "./Screens/PostsScreen";
 import Home from "./Screens/Home";
+import FlashMessage from "react-native-flash-message";
 
 
 const MainStack = createStackNavigator();
@@ -34,6 +35,7 @@ export default function App() {
           options={{ title: "Start screen" }}
         />
       </MainStack.Navigator>
+      <FlashMessage position="top" />
     </NavigationContainer>
   );
 }
