@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { styles } from "./Auth.styles";
 import { showMessage } from "react-native-flash-message";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function LoginScreen({}) {
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
@@ -60,15 +61,15 @@ export default function LoginScreen({}) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.container} // Застосуйте стилі контейнера тут
+        keyboardShouldPersistTaps="handled"
+      >
         <ImageBackground
           source={require("../assets/Photo_BG.jpg")}
           style={styles.imageBG}
         >
-          <KeyboardAvoidingView // визначаємо ОС та налаштовуємо поведінку клавіатури
-            behavior={Platform.OS == "ios" ? "padding" : "height"}
-            style={styles.formWrapperLogin}
-          >
+          <View style={styles.formWrapperLogin}>
             <Text style={styles.title}>Увійти</Text>
 
             <View
@@ -140,10 +141,10 @@ export default function LoginScreen({}) {
             </TouchableOpacity>
 
             <Text style={styles.navigate}>Вже є акаунт? Увійти</Text>
-          </KeyboardAvoidingView>
+            <View style={{ height: 50 }} />
+          </View>
         </ImageBackground>
-      </View>
-      
+      </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
   );
 }
