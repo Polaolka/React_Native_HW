@@ -41,6 +41,17 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 78,
   },
+  formWrapperLogin: { 
+    marginTop: 320,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    backgroundColor: "#fff",
+    width: "100%",
+    fontFamily: "Roboto-regular",
+    paddingTop: 0,
+    paddingHorizontal: 16,
+    paddingBottom: 78,
+   },
   buttonAdd: {
     position: "absolute",
     top: 81,
@@ -77,18 +88,13 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     fontWeight: "400",
+
+  },
+  placeholderPassBtn: {
     position: "absolute",
     backgroundColor: "transparent",
     top: 14,
     right: 16,
-  },
-  placeholderTextPassActive: {
-    position: "absolute",
-    right: 16,
-    top: 14,
-    fontSize: 16,
-    color: "#1B4371",
-  backgroundColor: "transparent",
   },
   placeholderTextActive: {
     color: "transparent",

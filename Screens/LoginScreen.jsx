@@ -1,12 +1,15 @@
 import React, { useEffect, useState, useDispatch } from "react";
 import { StyleSheet, Text, Image, View, FlatList, ImageBackground, TextInput, TouchableOpacity } from "react-native";
 import { styles } from "./Auth.styles";
-import { AntDesign } from "@expo/vector-icons";
-
 
 export default function LoginScreen({}) {
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleFocusEmail = () => {
     setIsFocusedEmail(true);
@@ -37,22 +40,7 @@ export default function LoginScreen({}) {
         source={require("../assets/Photo_BG.jpg")}
         style={styles.imageBG}
       >
-        <View style={styles.avatarThumb}>
-          <TouchableOpacity
-            style={styles.buttonAdd}
-            onPress={() => {
-              // Обробка натискання кнопки
-            }}
-          >
-            <AntDesign
-              name="pluscircleo"
-              size={24}
-              color="#FF6C00"
-              style={styles.addIcon}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.formWrapper}>
+        <View style={styles.formWrapperLogin}>
           <Text style={styles.title}>Увійти</Text>
 
           <View
@@ -86,7 +74,11 @@ export default function LoginScreen({}) {
               isFocusedPassword && styles.inputContainerActive,
             ]}
           >
-            <Text style={styles.placeholderTextPass}>Показати</Text>
+            <TouchableOpacity style={styles.placeholderPassBtn} onPress={toggleShowPassword}>
+              <Text style={styles.placeholderTextPass}>
+                {showPassword ? "Сховати" : "Показати"}
+              </Text>
+            </TouchableOpacity>
             {!formData.password && (
               <Text
                 style={[
@@ -104,19 +96,20 @@ export default function LoginScreen({}) {
               onBlur={handleBlurPassword}
               onChangeText={(text) => setFormData({ ...formData, password: text })}
               value={formData.password}
+              secureTextEntry={!showPassword} 
             />
           </View>
 
           <TouchableOpacity
             style={styles.button}
-            // onPress={() => {
-            //   // Обробка натискання кнопки
-            // }}
+            onPress={() => {
+              // Обробка натискання кнопки
+            }}
           >
             <Text style={styles.buttonText}>Зареєстуватися</Text>
           </TouchableOpacity>
 
-          <Text style={styles.navigate}>Немає акаунту? Зареєструватися</Text>
+          <Text style={styles.navigate}>Вже є акаунт? Увійти</Text>
         </View>
       </ImageBackground>
     </View>

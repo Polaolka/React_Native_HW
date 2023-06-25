@@ -16,6 +16,11 @@ export default function RegistrationScreen() {
   const [isFocusedLogin, setIsFocusedLogin] = useState(false);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleFocusLogin = () => {
     setIsFocusedLogin(true);
@@ -128,7 +133,11 @@ export default function RegistrationScreen() {
               isFocusedPassword && styles.inputContainerActive,
             ]}
           >
-            <Text style={styles.placeholderTextPass}>Показати</Text>
+            <TouchableOpacity style={styles.placeholderPassBtn} onPress={toggleShowPassword}>
+              <Text style={styles.placeholderTextPass}>
+                {showPassword ? "Сховати" : "Показати"}
+              </Text>
+            </TouchableOpacity>
             {!formData.password && (
               <Text
                 style={[
@@ -146,6 +155,7 @@ export default function RegistrationScreen() {
               onBlur={handleBlurPassword}
               onChangeText={(text) => setFormData({ ...formData, password: text })}
               value={formData.password}
+              secureTextEntry={!showPassword} 
             />
           </View>
 
