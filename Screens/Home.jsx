@@ -1,18 +1,78 @@
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Feather, AntDesign, Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native";
+
+const Tab = createBottomTabNavigator();
+
+const screenOptions = ({ navigation, route }) => ({
+  initialRouteName: "Home",
+  tabBarShowLabel: false,
+  tabBarButton: (props) => <TouchableOpacity {...props} />,
+  tabBarActiveTintColor: "#ffffff",
+  tabBarActiveBackgroundColor: "#FF6C00",
+  tabBarIconStyle: { color: "#212121CC" },
+  tabBarHideOnKeyboard: true,
+  tabBarIcon: ({ color }) => {
+    if (route.name === "Posts") {
+      return <Feather name="grid" size={24} color={color} />;
+    }
+    if (route.name === "CreatePosts") {
+      return <Feather name="plus" size={24} color={color} />;
+    }
+    return <Feather name="user" size={24} color={color} />;
+  },
+  tabBarItemStyle: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: 40,
+    width: 70,
+    borderRadius: 50,
+    marginHorizontal: 20,
+  },
+  tabBarStyle: {
+    height: 84,
+    backgroundColor: "#FFFFFF",
+    borderTopWidth: 1,
+    borderTopColor: "#b8b8b8",
+    paddingTop: 9,
+    paddingHorizontal: 30,
+  },
+});
+
 import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
+import PostsScreen from "./PostsScreen";
+import CreatePostsScreen from "./CreatePostsScreen";
+import ProfileScreen from "./ProfileScreen";
 const Home = ({ navigation }) => {
   return (
-    <View style={styles.container}>
-      <Text>Start Screen</Text>
-      <Button
-        title="Go to Login"
-        onPress={() => navigation.navigate("Login")}
+    <Tab.Navigator initialRouteName="Posts" screenOptions={screenOptions}>
+      <Tab.Screen
+        name="Публікації"
+        component={PostsScreen}
+        options={{
+          tabBarLabel: "Публікації",
+          tabBarIcon: ({ color }) => (
+            <Feather name="grid" size={24} color={color} />
+          ),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => {}} style={{ right: 16 }}>
+              <Feather name="log-out" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
+          ),
+        }}
       />
-      <Button
-        title="Go to Register"
-        onPress={() => navigation.navigate("Register")}
+      <Tab.Screen
+        name="CreatePosts"
+        component={CreatePostsScreen}
+        options={{ headerShown: false }}
       />
-    </View>
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ headerShown: false }}
+      />
+    </Tab.Navigator>
   );
 };
 
