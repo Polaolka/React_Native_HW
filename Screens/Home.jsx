@@ -1,6 +1,10 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Feather, AntDesign, Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { TouchableOpacity, Text, StyleSheet, } from "react-native";
+import React from "react";
+import PostsScreen from "./PostsScreen";
+import CreatePostsScreen from "./CreatePostsScreen";
+import ProfileScreen from "./ProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -39,11 +43,7 @@ const screenOptions = ({ navigation, route }) => ({
   },
 });
 
-import React from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
-import PostsScreen from "./PostsScreen";
-import CreatePostsScreen from "./CreatePostsScreen";
-import ProfileScreen from "./ProfileScreen";
+
 const Home = ({ navigation }) => {
   return (
     <Tab.Navigator initialRouteName="Posts" screenOptions={screenOptions}>
@@ -51,7 +51,16 @@ const Home = ({ navigation }) => {
         name="Публікації"
         component={PostsScreen}
         options={{
-          tabBarLabel: "Публікації",
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                color: focused ? "#ffffff" : "#212121",
+                textAlign: "center",  alignItems: "center"
+              }}
+            >
+              Публікації
+            </Text>
+          ),
           tabBarIcon: ({ color }) => (
             <Feather name="grid" size={24} color={color} />
           ),
