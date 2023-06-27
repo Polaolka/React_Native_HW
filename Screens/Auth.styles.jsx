@@ -1,7 +1,15 @@
 import { StyleSheet } from "react-native";
 
+
 export const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+    width: "100%",
+    // alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#ecf0f1",
+    paddingHorizontal: 0,
+  },
   imageBG: {
     justifyContent: "flex-end",
     alignItems: "center",
@@ -58,7 +66,7 @@ export const styles = StyleSheet.create({
     right: -12,
     backgroundColor: "",
     borderRadius: 50,
-    border: "none",
+    borderWidth: 0,
   },
   inputContainer: {
     position: "relative",
