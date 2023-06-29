@@ -5,16 +5,16 @@ import {
   ImageBackground,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
 import { styles } from "./Auth.styles";
 import { showMessage } from "react-native-flash-message";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useNavigation } from '@react-navigation/native';
 
 export default function LoginScreen({}) {
+  const navigation = useNavigation();
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -57,12 +57,13 @@ export default function LoginScreen({}) {
       backgroundColor: "#6CB0F3",
       color: "white",
     });
+    navigation.navigate("Home");
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAwareScrollView
-        contentContainerStyle={styles.container} // Застосуйте стилі контейнера тут
+        contentContainerStyle={styles.container} 
         keyboardShouldPersistTaps="handled"
       >
         <ImageBackground
@@ -140,7 +141,12 @@ export default function LoginScreen({}) {
               <Text style={styles.buttonText}>Увійти</Text>
             </TouchableOpacity>
 
-            <Text style={styles.navigate}>Вже є акаунт? Увійти</Text>
+            <Text 
+            style={styles.navigate}
+            >Немає акаунту? <Text
+            style={styles.navigateUnderlined}
+            onPress={() => navigation.navigate("Register")}
+            >Зареєструватися</Text></Text>
             <View style={{ height: 50 }} />
           </View>
         </ImageBackground>
@@ -148,3 +154,5 @@ export default function LoginScreen({}) {
     </TouchableWithoutFeedback>
   );
 }
+
+

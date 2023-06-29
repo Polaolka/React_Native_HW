@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useDispatch } from "react";
+import React, {  useState } from "react";
 import {
   Text,
   View,
@@ -7,15 +7,16 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  KeyboardAvoidingView,
-  Platform,
 } from "react-native";
 import { styles } from "./Auth.styles";
 import { AntDesign } from "@expo/vector-icons";
 import { showMessage } from "react-native-flash-message";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useNavigation } from "@react-navigation/native";
+import MainButton from "../Components/Button/MainButton";
 
 export default function RegistrationScreen() {
+  const navigation = useNavigation();
   const [isFocusedLogin, setIsFocusedLogin] = useState(false);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
@@ -67,12 +68,13 @@ export default function RegistrationScreen() {
       backgroundColor: "#6CB0F3",
       color: "white",
     });
+    navigation.navigate("Home", { screen: "PostsScreen" });
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAwareScrollView
-        contentContainerStyle={styles.container} // Застосуйте стилі контейнера тут
+        contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled"
       >
         <ImageBackground
@@ -90,7 +92,6 @@ export default function RegistrationScreen() {
                 name="pluscircleo"
                 size={24}
                 color="#FF6C00"
-                style={styles.addIcon}
               />
             </TouchableOpacity>
           </View>
@@ -189,11 +190,23 @@ export default function RegistrationScreen() {
               />
             </View>
 
-            <TouchableOpacity style={styles.button} onPress={handlePress}>
-              <Text style={styles.buttonText}>Зареєстуватися</Text>
-            </TouchableOpacity>
+            {/* <TouchableOpacity style={styles.button} onPress={handlePress}> */}
+              <MainButton
+                text="Зареєстуватися"
+                onPress={handlePress}
+              />
+              {/* <Text style={styles.buttonText}>Зареєстуватися</Text>
+            </TouchableOpacity> */}
 
-            <Text style={styles.navigate}>Вже є акаунт? Увійти</Text>
+            <Text style={styles.navigate}>
+              Вже є акаунт?{" "}
+              <Text
+                style={styles.navigateUnderlined}
+                onPress={() => navigation.navigate("Login")}
+              >
+                Увійти
+              </Text>
+            </Text>
           </View>
         </ImageBackground>
       </KeyboardAwareScrollView>

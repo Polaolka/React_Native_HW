@@ -134,6 +134,12 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     color: "#1B4371",
   },
+  navigateUnderlined: {
+    // textAlign: "center",
+    // fontSize: 16,
+    // color: "#1B4371",
+    textDecorationLine: 'underline',
+  },
   buttonText: {
     color: "#FFFFFF",
   },

@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useDispatch } from "react";
-import { StyleSheet, Text, Image, View, FlatList, ImageBackground, TextInput, TouchableOpacity, Button } from "react-native";
+import { StyleSheet, Text, Image, View, FlatList, ImageBackground, TextInput, TouchableOpacity } from "react-native";
 import { styles } from "./Auth.styles";
 import { AntDesign } from "@expo/vector-icons";
 
 
-export default function PostsScreen({ navigation }) {
+export default function CreatePostsScreen({}) {
 //   const [isFocused, setIsFocused] = useState(false);
 
 //   const handleFocus = () => {
@@ -24,15 +24,6 @@ export default function PostsScreen({ navigation }) {
         style={styles.imageBG}
       >
           <Text style={styles.title}>Posts</Text>
-
-          <Button
-        title="Go to Login"
-        onPress={() => navigation.navigate("Login")}
-      />
-      <Button
-        title="Go to Register"
-        onPress={() => navigation.navigate("Register")}
-      />
       </ImageBackground>
     </View>
   );
