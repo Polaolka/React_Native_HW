@@ -95,7 +95,6 @@ export default function RegistrationScreen() {
               />
             </TouchableOpacity>
           </View>
-          {/* style={styles.formWrapper} */}
           <View style={styles.formWrapper}>
             <Text style={styles.title}>Реєстрація</Text>
 
@@ -189,15 +188,10 @@ export default function RegistrationScreen() {
                 secureTextEntry={!showPassword}
               />
             </View>
-
-            {/* <TouchableOpacity style={styles.button} onPress={handlePress}> */}
               <MainButton
                 text="Зареєстуватися"
                 onPress={handlePress}
               />
-              {/* <Text style={styles.buttonText}>Зареєстуватися</Text>
-            </TouchableOpacity> */}
-
             <Text style={styles.navigate}>
               Вже є акаунт?{" "}
               <Text

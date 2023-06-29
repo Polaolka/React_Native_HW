@@ -63,7 +63,7 @@ export default function LoginScreen({}) {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAwareScrollView
-        contentContainerStyle={styles.container} // Застосуйте стилі контейнера тут
+        contentContainerStyle={styles.container} 
         keyboardShouldPersistTaps="handled"
       >
         <ImageBackground

@@ -1,5 +1,5 @@
 import { Feather } from "@expo/vector-icons";
-import { Image, Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 
 const CommentItem = () => {
   return (
