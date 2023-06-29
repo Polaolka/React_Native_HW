@@ -5,7 +5,6 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    // alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#ecf0f1",
     paddingHorizontal: 0,
@@ -34,9 +33,6 @@ export const styles = StyleSheet.create({
     textAlign: "center",
   },
   addIcon: {
-    // position: "absolute",
-    // top: 81,
-    // right: -12,
   },
   formWrapper: {
     marginTop: -60,
@@ -133,12 +129,6 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
     color: "#1B4371",
-  },
-  navigateUnderlined: {
-    // textAlign: "center",
-    // fontSize: 16,
-    // color: "#1B4371",
-    textDecorationLine: 'underline',
   },
   buttonText: {
     color: "#FFFFFF",

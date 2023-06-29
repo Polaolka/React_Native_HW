@@ -1,18 +1,10 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { useFonts } from "expo-font";
 import { NavigationContainer } from "@react-navigation/native";
 import "react-native-gesture-handler";
 import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
-import LoginScreen from "./Screens/LoginScreen";
-import RegistrationScreen from "./Screens/RegistrationScreen";
-import PostsScreen from "./Screens/PostsScreen";
-import Home from "./Screens/Home";
 import FlashMessage from "react-native-flash-message";
 import { Layout } from "./Components/Layout";
-
-const MainStack = createStackNavigator();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -39,16 +31,3 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-
-{
-  /* <MainStack.Navigator initialRouteName="Home">
-<MainStack.Screen name="Register" component={RegistrationScreen} />
-<MainStack.Screen name="Login" component={LoginScreen} />
-<MainStack.Screen name="PostsScreen" component={PostsScreen} />
-<MainStack.Screen
-  name="Home"
-  component={Home}
-  options={{ }}
-/>
-</MainStack.Navigator> */
-}

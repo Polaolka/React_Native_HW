@@ -1,4 +1,4 @@
-import { Feather, Ionicons, AntDesign } from "@expo/vector-icons";
+import { Feather, AntDesign } from "@expo/vector-icons";
 
 import {
   ImageBackground,
