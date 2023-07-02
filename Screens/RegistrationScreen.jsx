@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Image
 } from "react-native";
 import { styles } from "./Auth.styles";
 import { AntDesign } from "@expo/vector-icons";
@@ -15,13 +16,15 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { useNavigation } from "@react-navigation/native";
 import MainButton from "../Components/Button/MainButton";
 import { useDispatch } from "react-redux";
-import { launchCameraAsync } from "expo-image-picker";
+import { launchCameraAsync, MediaTypeOptions } from "expo-image-picker";
 import { registerUser } from "../redux/auth/authOperations";
-import { uploadPhotoToServer } from "../firebase/uploadPhoto.js";
+import { uploadPhotoToServer } from "../firebase/uploadPhotoToServer.js";
 import * as Permissions from "expo-permissions";
+
 
 export default function RegistrationScreen() {
   const dispatch = useDispatch();
+
   const initialState = {
     login: "",
     email: "",
@@ -30,12 +33,14 @@ export default function RegistrationScreen() {
   };
 
   const navigation = useNavigation();
+
   const [isFocusedLogin, setIsFocusedLogin] = useState(false);
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [picture, setPicture] = useState("");
   const [formData, setFormData] = useState(initialState);
+  const [hasPermission, setHasPermission] = useState(null);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -91,7 +96,7 @@ export default function RegistrationScreen() {
 
     try {
       const photoUrl = await uploadPhotoToServer(picture);
-      console.log(formData);
+      console.log("first", formData);
       dispatch(
         registerUser({
           ...formData,
@@ -129,16 +134,12 @@ export default function RegistrationScreen() {
                 <AntDesign name="close" size={24} color="#BDBDBD" />
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity
-                style={styles.buttonAdd}
-                onPress={() => {
-                  takePhoto;
-                }}
-              >
+              <TouchableOpacity style={styles.buttonAdd} onPress={takePhoto}>
                 <AntDesign name="pluscircleo" size={24} color="#FF6C00" />
               </TouchableOpacity>
             )}
           </View>
+
           <View style={styles.formWrapper}>
             <Text style={styles.title}>Реєстрація</Text>
 

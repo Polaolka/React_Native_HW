@@ -12,8 +12,11 @@ import { styles } from "./Auth.styles";
 import { showMessage } from "react-native-flash-message";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { logInUser } from "../redux/auth/authOperations";
 
 export default function LoginScreen({}) {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedPassword, setIsFocusedPassword] = useState(false);
@@ -22,19 +25,15 @@ export default function LoginScreen({}) {
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-
   const handleFocusEmail = () => {
     setIsFocusedEmail(true);
   };
-
   const handleBlurEmail = () => {
     setIsFocusedEmail(false);
   };
-
   const handleFocusPassword = () => {
     setIsFocusedPassword(true);
   };
-
   const handleBlurPassword = () => {
     setIsFocusedPassword(false);
   };
@@ -47,16 +46,20 @@ export default function LoginScreen({}) {
   const [formData, setFormData] = useState(initialState);
 
   const handlePress = () => {
-    console.log(formData);
+    Keyboard.dismiss();
     setFormData(initialState);
-    showMessage({
-      message: "success",
-      description: `Email: ${formData.email}, Пароль: ${formData.password}`,
-      type: "info",
-      duration: 2000,
-      backgroundColor: "#6CB0F3",
-      color: "white",
-    });
+    if (!formData.email || !formData.password) {
+      showMessage({
+        message: "error",
+        description: `please fill in the field password and email`,
+        type: "info",
+        duration: 2000,
+        backgroundColor: "#6CB0F3",
+        color: "white",
+      });
+      return;
+    }
+    dispatch(logInUser(formData));
     navigation.navigate("Posts");
   };
 

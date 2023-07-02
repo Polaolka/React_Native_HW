@@ -74,7 +74,6 @@ const Home = ({ navigation }) => {
       <Tab.Screen
         name="CreatePosts"
         component={CreatePostsScreen}
-        options={{ headerShown: false }}
       />
       <Tab.Screen
         name="Profile"
