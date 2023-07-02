@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useDispatch } from "react";
+import React, { useState, } from "react";
 import {
   Text,
   View,
@@ -11,7 +11,7 @@ import {
 import { styles } from "./Auth.styles";
 import { showMessage } from "react-native-flash-message";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 
 export default function LoginScreen({}) {
   const navigation = useNavigation();
@@ -57,7 +57,7 @@ export default function LoginScreen({}) {
       backgroundColor: "#6CB0F3",
       color: "white",
     });
-    navigation.navigate("Home");
+    navigation.navigate("Posts");
   };
 
   return (
@@ -141,12 +141,7 @@ export default function LoginScreen({}) {
               <Text style={styles.buttonText}>Увійти</Text>
             </TouchableOpacity>
 
-            <Text 
-            style={styles.navigate}
-            >Немає акаунту? <Text
-            style={styles.navigateUnderlined}
-            onPress={() => navigation.navigate("Register")}
-            >Зареєструватися</Text></Text>
+            <Text style={styles.navigate}>Вже є акаунт? Увійти</Text>
             <View style={{ height: 50 }} />
           </View>
         </ImageBackground>
@@ -154,5 +149,3 @@ export default function LoginScreen({}) {
     </TouchableWithoutFeedback>
   );
 }
-
-

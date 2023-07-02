@@ -1,39 +1,118 @@
-import React, { useEffect, useState, useDispatch } from "react";
-import { StyleSheet, Text, Image, View, FlatList, ImageBackground, TextInput, TouchableOpacity, Button } from "react-native";
-import { styles } from "./Auth.styles";
-import { AntDesign } from "@expo/vector-icons";
+import React from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  FlatList,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import { FontAwesome5, Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
-
-export default function PostsScreen({ navigation }) {
-//   const [isFocused, setIsFocused] = useState(false);
-
-//   const handleFocus = () => {
-//     setIsFocused(true);
-//   };
-
-//   const handleBlur = () => {
-//     setIsFocused(false);
-//   };
-
-
-
+const PostsScreen = () => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <ImageBackground
-        source={require("../assets/Photo_BG.jpg")}
-        style={styles.imageBG}
-      >
-          <Text style={styles.title}>Posts</Text>
+      <View style={styles.userInfo}>
+        <View style={styles.userFotoWrap}>
+          <Image
+            style={styles.userFoto}
+            source={require("../assets/User_foto.jpg")}
+          />
+        </View>
+        <View >
+          <Text style={styles.userName}>User Name</Text>
+          <Text style={styles.userEmail}>User Email</Text>
+        </View>
+      </View>
+      <View style={styles.postWrap}>
+        <View style={styles.imgWrap}>
+          <Image
+            source={require("../assets/Rectangle_23.jpg")}
+            style={styles.photo}
+          />
+        </View>
 
-          <Button
-        title="Go to Login"
-        onPress={() => navigation.navigate("Login")}
-      />
-      <Button
-        title="Go to Register"
-        onPress={() => navigation.navigate("Register")}
-      />
-      </ImageBackground>
+        <Text style={styles.message}>Message`s text</Text>
+        <View style={styles.postInfoWrap}>
+          <TouchableOpacity style={styles.commentsInfo} onPress={() => navigation.navigate("Comments")}>
+            <FontAwesome5 name="comment" size={24} color="#BDBDBD" />
+            <Text>100</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.locationInfo} onPress={() => navigation.navigate("Map")}>
+            <Feather name="map-pin" size={24} color="#BDBDBD" />
+            <Text>Location</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: 32,
+    justifyContent: "center",
+    marginHorizontal: 16,
+  },
+  userInfo: {
+    marginBottom: 32,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  userFotoWrap: {
+    width: 60,
+    height: 60,
+    backgroundColor: "#212121",
+    borderRadius: 16,
+    marginRight: 8,
+  },
+  userFoto: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+  userName: {
+    fontFamily: "Roboto-medium",
+    fontSize: 13,
+    color: "#212121",
+  },
+  userEmail: {
+    fontFamily: "Roboto-regular",
+    fontSize: 11,
+    color: "#212121CC",
+  },
+  postWrap: {
+    marginBottom: 32,
+  },
+  imgWrap: {
+    borderRadius: 8,
+    overflow: "hidden",
+    marginBottom: 8,
+  },
+  photo: {
+    width: "100%",
+    height: 240,
+  },
+  postInfoWrap: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  commentsInfo: {
+    flexDirection: "row",
+    gap: 6,
+  },
+  locationInfo: {
+    flexDirection: "row",
+    gap: 6,
+  },
+  message: {
+    fontFamily: "Roboto-medium",
+    fontSize: 16,
+    color: "#212121",
+    marginBottom: 10,
+  },
+});
+
+export default PostsScreen;

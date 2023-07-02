@@ -9,7 +9,7 @@ import ProfileScreen from "./ProfileScreen";
 const Tab = createBottomTabNavigator();
 
 const screenOptions = ({ navigation, route }) => ({
-  initialRouteName: "Home",
+  initialRouteName: "Posts",
   tabBarShowLabel: false,
   tabBarButton: (props) => <TouchableOpacity {...props} />,
   tabBarActiveTintColor: "#ffffff",
@@ -48,14 +48,14 @@ const Home = ({ navigation }) => {
   return (
     <Tab.Navigator initialRouteName="Posts" screenOptions={screenOptions}>
       <Tab.Screen
-        name="Публікації"
+        name="Posts"
         component={PostsScreen}
         options={{
           tabBarLabel: ({ focused }) => (
             <Text
               style={{
                 color: focused ? "#ffffff" : "#212121",
-                textAlign: "center",  alignItems: "center"
+                textAlign: "center",  alignItems: "center", marginHorizontal: "auto",
               }}
             >
               Публікації
