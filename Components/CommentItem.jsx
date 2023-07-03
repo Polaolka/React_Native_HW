@@ -1,16 +1,27 @@
 import { Feather } from "@expo/vector-icons";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, Image } from "react-native";
+import { useSelector } from "react-redux";
+import { selectUserId } from "../redux/auth/selectors";
 
-const CommentItem = () => {
+const CommentItem = ({ comment }) => {
+  console.log("comment:", comment);
+  const { userId, text, userAvatar, createDate } = comment?.item;
+  const currentUserId  = useSelector(selectUserId);
+
   return (
-    <View style={styles.container}>
-      <Feather name="user" size={28} color="white" style={styles.img} />
-      <View style={styles.textContainer}>
-        <Text style={styles.text} lineBreakMode={"wrap"}>
-          Really love your most recent photo. I’ve been trying to capture the
-          same thing for a few months and would love some tips!
+    <View style={currentUserId === userId ? styles.userContainer : styles.container}>
+      {userAvatar ? (
+        <Image
+          source={{ uri: userAvatar }}
+          style={currentUserId === userId ? styles.userAvatar : styles.avatar}
+        />
+      ) : (
+        <Feather name="user" size={28} color="#bdbdbd" style={styles.avatar} />
+      )}
+      <View style={currentUserId === userId ? styles.userTextContainer : styles.textContainer}>
+        <Text style={styles.text} lineBreakMode={"wrap"}>{text}
         </Text>
-        <Text style={styles.date}>09 червня, 2020 | 08:40</Text>
+        <Text style={currentUserId === userId ? styles.userDate : styles.date}>{createDate}</Text>
       </View>
     </View>
   );
@@ -21,18 +32,36 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 24,
   },
-  img: {
+  userContainer: {
+    flexDirection: "row-reverse",
+    marginTop: 24,
+  },
+  avatar: {
     height: 28,
     width: 28,
     borderRadius: 50,
     marginRight: 16,
     backgroundColor: "#BDBDBD",
   },
+  userAvatar: {
+    height: 28,
+    width: 28,
+    borderRadius: 28,
+    marginLeft: 16,
+  },
   textContainer: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.03)",
+    backgroundColor: "#00000008",
     borderRadius: 6,
     borderTopLeftRadius: 0,
+    padding: 16,
+    marginBottom: 24,
+  },
+  userTextContainer: {
+    flex: 1,
+    backgroundColor: "#00000008",
+    borderRadius: 6,
+    borderTopRightRadius: 0,
     padding: 16,
     marginBottom: 24,
   },
@@ -47,6 +76,11 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 12,
     textAlign: "right",
+  },
+  userDate: {
+    color: "#BDBDBD",
+    fontSize: 10,
+    lineHeight: 12,
   },
 });
 

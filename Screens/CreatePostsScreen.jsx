@@ -20,7 +20,8 @@ import { uploadPhotoToServer } from "../firebase/uploadPhotoToServer";
 import { writePostToFirestore } from "../firebase/writePostToFirestore";
 import { useSelector } from "react-redux";
 import { selectUserId } from "../redux/auth/selectors";
-import { format } from 'date-fns';
+import { format } from "date-fns";
+import { coordsToLocationName } from "../servises/coordsToLocationName";
 
 const CreatePostScreen = ({ navigation }) => {
   const initialState = {
@@ -36,8 +37,6 @@ const CreatePostScreen = ({ navigation }) => {
   const userId = useSelector(selectUserId);
   const [picture, setPicture] = useState("");
   const [formData, setFormData] = useState(initialState);
-  const [camera, setCamera] = useState(null);
-  const [photo, setPhoto] = useState("");
   const [hasPermission, setHasPermission] = useState(null);
 
   useEffect(() => {
@@ -100,7 +99,7 @@ const CreatePostScreen = ({ navigation }) => {
     try {
       const photoUrl = await uploadPhotoToServer(picture);
       const currentDate = new Date();
-      const formattedDate = format(currentDate, 'dd MMMM, yyyy | HH:mm');
+      const formattedDate = format(currentDate, "dd MMMM, yyyy | HH:mm");
 
       await writePostToFirestore({
         ...formData,
@@ -115,6 +114,37 @@ const CreatePostScreen = ({ navigation }) => {
     } catch (error) {
       console.log("error3:", error);
     }
+  };
+  const deletePost = () => {
+    setPicture("");
+    setFormData(initialState);
+  };
+
+  const getLocationsText = async () => {
+    try {
+      const latitude = formData.photoLocation.coords.latitude;
+      const longitude = formData.photoLocation.coords.longitude;
+      const location = await coordsToLocationName(latitude, longitude);
+
+      const textLocation = `${location[0].city}, ${location[0].region}`;
+
+      if (textLocation.length > 30) {
+        textLocation = textLocation.slice(0, 30) + "...";
+      }
+      return textLocation;
+    } catch (error) {
+      console.log("error22:", error);
+    }
+  };
+
+  const handlePressNavMarker = async () => {
+    const locationName = await getLocationsText();
+
+    setFormData((prevState) => ({
+      ...prevState,
+      locationName,
+    }));
+    navigation.navigate("Map");
   };
 
   return (
@@ -146,7 +176,7 @@ const CreatePostScreen = ({ navigation }) => {
         <View style={styles.locationInfoWrap}>
           <TouchableOpacity
             style={styles.locationInfo}
-            onPress={() => navigation.navigate("Map")}
+            onPress={handlePressNavMarker}
           >
             <Feather name="map-pin" size={24} color="#BDBDBD" />
           </TouchableOpacity>
@@ -166,11 +196,19 @@ const CreatePostScreen = ({ navigation }) => {
       </View>
       <TouchableOpacity
         activeOpacity={0.8}
-        style={ picture ? styles.btn : styles.disBtn}
+        style={picture ? styles.btn : styles.disBtn}
         disabled={picture ? false : true}
         onPress={sendPhoto}
       >
         <Text style={styles.textBtn}>Опублікувати</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={styles.trashBtn}
+        disabled={picture ? false : true}
+        onPress={deletePost}
+      >
+        <Feather name="trash-2" size={24} color="#BDBDBD" />
       </TouchableOpacity>
     </View>
   );
@@ -276,6 +314,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
+  },
+  trashBtn: {
+    alignSelf: "center",
+    width: 70,
+    backgroundColor: "#E8E8E8",
+    borderRadius: 20,
+    padding: 16,
+    marginTop: "auto",
+    marginBottom: 16,
+    alignItems: "center",
   },
 });
 

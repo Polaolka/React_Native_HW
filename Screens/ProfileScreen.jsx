@@ -1,14 +1,25 @@
 import { Feather, AntDesign } from "@expo/vector-icons";
-
 import {
   ImageBackground,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  FlatList,
+  Image,
 } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
+import { selectUser } from "../redux/auth/selectors";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { db } from "../firebase/config";
+import { authSignOutUser } from "../redux/auth/authOperations";
 
 export default function ProfileScreen({ navigation }) {
+  const dispatch = useDispatch();
+  const { avatar, email, isAuth, login, userId } = useSelector(selectUser);
+  const [avatarImg] = useState(avatar || "");
+  const [posts, setPosts] = useState([]);
   return (
     <ImageBackground
       source={require("../assets/Photo_BG.jpg")}
@@ -21,12 +32,12 @@ export default function ProfileScreen({ navigation }) {
         <View style={styles.avatar}>
           <Feather name="user" size={120} color="#bdbdbd" />
           <TouchableOpacity style={styles.btnAdd} activeOpacity={1}>
-          <AntDesign
-                name="pluscircleo"
-                size={24}
-                color="#FF6C00"
-                style={styles.addIcon}
-              />
+            <AntDesign
+              name="pluscircleo"
+              size={24}
+              color="#FF6C00"
+              style={styles.addIcon}
+            />
           </TouchableOpacity>
         </View>
         <Text style={styles.login}>user name</Text>

@@ -16,9 +16,7 @@ const PostItem = ({ navigation, post }) => {
   const [likesNumber, setLikesNumber] = useState(null);
   const [location, setLocation] = useState("");
   const userId = useSelector(selectUserId);
-  console.log(post);
-
-  //   {"comments": [], "dateCreate": "", "likes": [], "locationName": "Qwe", "ownerId": "", "photoLocation": {"coords": {"accuracy": 8.461000442504883, "altitude": 205.5, "altitudeAccuracy": 1.295071005821228, "heading": 0, "latitude": 49.4351064, "longitude": 29.6922618, "speed": 0}, "mocked": false, "timestamp": 1688301202793}, "photoUrl": "", "title": "Qwe"}
+  
   const {
     postId,
     photoUrl,
@@ -31,7 +29,6 @@ const PostItem = ({ navigation, post }) => {
     likes,
     ownerId,
   } = post.item;
-//   console.log("post.item:", post.item);
   useEffect(() => {
     (async () => {
       try {
@@ -66,15 +63,21 @@ const PostItem = ({ navigation, post }) => {
 
   const handlePressLike = async () => {
     const index = likes.indexOf(userId);
-
+    let updatedLikes = [];
+  
     if (index > -1) {
-      likes.splice(index, 1);
+      updatedLikes = likes.filter((likeId) => likeId !== userId);
     } else {
-      likes = [...likes, userId];
+      updatedLikes = [...likes, userId];
     }
-    await updateDoc(doc(db, "posts", postId), {
-      likes,
-    });
+  
+    const updatedPost = { ...post.item, likes: updatedLikes };
+  
+    try {
+      await updateDoc(doc(db, "posts", postId), updatedPost);
+    } catch (error) {
+      console.log("Error updating post:", error);
+    }
   };
 
   return (
