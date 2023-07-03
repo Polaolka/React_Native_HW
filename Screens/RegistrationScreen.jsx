@@ -96,7 +96,7 @@ export default function RegistrationScreen() {
 
     try {
       const photoUrl = await uploadPhotoToServer(picture);
-      console.log("first", formData);
+
       dispatch(
         registerUser({
           ...formData,

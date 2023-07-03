@@ -104,4 +104,4 @@ export const authSlice = createSlice({
 });
 
 export const { getCurrentUser } = authSlice.actions;
-// updateUser
+

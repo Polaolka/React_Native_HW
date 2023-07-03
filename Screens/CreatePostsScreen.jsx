@@ -127,7 +127,6 @@ const CreatePostScreen = ({ navigation }) => {
       const location = await coordsToLocationName(latitude, longitude);
 
       const textLocation = `${location[0].city}, ${location[0].region}`;
-      console.log("textLocation:", textLocation);
       if (textLocation.length > 30) {
         textLocation = textLocation.slice(0, 30) + "...";
       }

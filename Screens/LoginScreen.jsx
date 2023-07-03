@@ -60,7 +60,7 @@ export default function LoginScreen({}) {
       return;
     }
     dispatch(logInUser(formData));
-    // navigation.navigate("Posts");
+
   };
 
   return (

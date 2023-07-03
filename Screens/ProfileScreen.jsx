@@ -52,15 +52,15 @@ export default function ProfileScreen({ navigation }) {
       }
       const { assets } = await launchCameraAsync();
       if (!assets[0]?.uri) return;
-      console.log("assets[0]?.uri:", assets[0]?.uri);
+
       setNewPicture(assets[0].uri);
-      console.log("newPicture:", newPicture);
+
       const photoUrl = await uploadPhotoToServer(assets[0].uri);
-      console.log("photoUrl:", photoUrl);
+
       dispatch(updateUser(photoUrl));
       setNewPicture(photoUrl);
     } catch (error) {
-      console.log("error takePhoto 1:", error);
+      console.log("error takePhoto:", error);
     }
 
   };
