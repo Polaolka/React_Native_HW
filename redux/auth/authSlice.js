@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerUser, logInUser, logOut } from "./authOperations.js";
+import {
+  registerUser,
+  logInUser,
+  logOut,
+  updateUser,
+} from "./authOperations.js";
 import { showMessage } from "react-native-flash-message";
 
 const initialState = {
@@ -50,13 +55,13 @@ export const authSlice = createSlice({
         state.avatar = payload.photoURL;
         state.isAuth = true;
         showMessage({
-            message: "success",
-            description: `Glad to see you again`,
-            type: "info",
-            duration: 2000,
-            backgroundColor: "#6CB0F3",
-            color: "white",
-          });
+          message: "success",
+          description: `Glad to see you again`,
+          type: "info",
+          duration: 2000,
+          backgroundColor: "#6CB0F3",
+          color: "white",
+        });
       })
       .addCase(logInUser.rejected, (state, { payload }) => {
         showMessage({
@@ -75,14 +80,28 @@ export const authSlice = createSlice({
         state.avatar = null;
         state.isAuth = false;
         showMessage({
-            message: "success",
-            description: `see you soon`,
-            type: "info",
-            duration: 2000,
-            backgroundColor: "#6CB0F3",
-            color: "white",
-          });
+          message: "success",
+          description: `see you soon`,
+          type: "info",
+          duration: 2000,
+          backgroundColor: "#6CB0F3",
+          color: "white",
+        });
+      })
+      .addCase(updateUser.fulfilled, (state, { payload }) => {
+        state.avatar = payload.photoURL;
+      })
+      .addCase(updateUser.rejected, (state, { payload }) => {
+        showMessage({
+          message: "error",
+          description: `${payload}`,
+          type: "error",
+          duration: 2000,
+          backgroundColor: "#FF6C00;",
+          color: "white",
+        });
       }),
 });
 
 export const { getCurrentUser } = authSlice.actions;
+// updateUser

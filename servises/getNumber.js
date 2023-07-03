@@ -9,6 +9,6 @@ export const getNumber = async (postId, field) => {
     const number = array.length;
     return number;
   } catch (error) {
-    console.log(error);
+    console.log("error in getNumber:", error);
   }
 };

@@ -19,7 +19,6 @@ import { useState } from "react";
 
 export default function CommentsScreen({ route }) {
   const { photoUrl, comments, postId } = route.params;
-   console.log("comments in screen:", comments);
   const [comment, setComment] = useState("");
   const userId = useSelector(selectUserId);
   const avatar = useSelector(selectUserAvatar);

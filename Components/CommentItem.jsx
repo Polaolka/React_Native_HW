@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { selectUserId } from "../redux/auth/selectors";
 
 const CommentItem = ({ comment }) => {
-  console.log("comment:", comment);
   const { userId, text, userAvatar, createDate } = comment?.item;
   const currentUserId  = useSelector(selectUserId);
 
