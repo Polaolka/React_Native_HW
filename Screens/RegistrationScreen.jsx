@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Image
 } from "react-native";
 import { styles } from "./Auth.styles";
 import { AntDesign } from "@expo/vector-icons";
@@ -14,61 +15,101 @@ import { showMessage } from "react-native-flash-message";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useNavigation } from "@react-navigation/native";
 import MainButton from "../Components/Button/MainButton";
+import { useDispatch } from "react-redux";
+import { launchCameraAsync, MediaTypeOptions } from "expo-image-picker";
+import { registerUser } from "../redux/auth/authOperations";
+import { uploadPhotoToServer } from "../firebase/uploadPhotoToServer.js";
+import * as Permissions from "expo-permissions";
+
 
 export default function RegistrationScreen() {
-  const navigation = useNavigation();
-  const [isFocusedLogin, setIsFocusedLogin] = useState(false);
-  const [isFocusedEmail, setIsFocusedEmail] = useState(false);
-  const [isFocusedPassword, setIsFocusedPassword] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleFocusLogin = () => {
-    setIsFocusedLogin(true);
-  };
-
-  const handleBlurLogin = () => {
-    setIsFocusedLogin(false);
-  };
-
-  const handleFocusEmail = () => {
-    setIsFocusedEmail(true);
-  };
-
-  const handleBlurEmail = () => {
-    setIsFocusedEmail(false);
-  };
-
-  const handleFocusPassword = () => {
-    setIsFocusedPassword(true);
-  };
-
-  const handleBlurPassword = () => {
-    setIsFocusedPassword(false);
-  };
+  const dispatch = useDispatch();
 
   const initialState = {
     login: "",
     email: "",
     password: "",
+    avatar: "",
   };
-  const [formData, setFormData] = useState(initialState);
 
-  const handlePress = () => {
-    console.log(formData);
-    setFormData(initialState);
-    showMessage({
-      message: "success",
-      description: `Логін: ${formData.login}, Email: ${formData.email}, Пароль: ${formData.password}`,
-      type: "info",
-      duration: 2000,
-      backgroundColor: "#6CB0F3",
-      color: "white",
-    });
+  const navigation = useNavigation();
+
+  const [isFocusedLogin, setIsFocusedLogin] = useState(false);
+  const [isFocusedEmail, setIsFocusedEmail] = useState(false);
+  const [isFocusedPassword, setIsFocusedPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [picture, setPicture] = useState("");
+  const [formData, setFormData] = useState(initialState);
+  const [hasPermission, setHasPermission] = useState(null);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+  const handleFocusLogin = () => {
+    setIsFocusedLogin(true);
+  };
+  const handleBlurLogin = () => {
+    setIsFocusedLogin(false);
+  };
+  const handleFocusEmail = () => {
+    setIsFocusedEmail(true);
+  };
+  const handleBlurEmail = () => {
+    setIsFocusedEmail(false);
+  };
+  const handleFocusPassword = () => {
+    setIsFocusedPassword(true);
+  };
+  const handleBlurPassword = () => {
+    setIsFocusedPassword(false);
+  };
+
+  const takePhoto = async () => {
+    try {
+      const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+      if (status !== "granted") {
+        return console.log("Permission not granted");
+      }
+      const { assets } = await launchCameraAsync();
+
+      if (!assets[0]?.uri) return;
+
+      setPicture(assets[0].uri);
+    } catch (error) {
+      console.log("error:", error);
+    }
+  };
+
+  const handlePress = async () => {
+    Keyboard.dismiss();
+    if (!formData.email || !formData.password) {
+      showMessage({
+        message: "error",
+        description: `please fill in the field password and email`,
+        type: "info",
+        duration: 2000,
+        backgroundColor: "#6CB0F3",
+        color: "white",
+      });
+      return;
+    }
+
+    try {
+      const photoUrl = await uploadPhotoToServer(picture);
+
+      dispatch(
+        registerUser({
+          ...formData,
+          login: formData.login.trim(),
+          avatar: photoUrl,
+        })
+      );
+    } catch (error) {
+      console.log("error:", error);
+    }
+
     navigation.navigate("Home", { screen: "PostsScreen" });
+    setFormData(initialState);
   };
 
   return (
@@ -82,19 +123,23 @@ export default function RegistrationScreen() {
           style={styles.imageBG}
         >
           <View style={styles.avatarThumb}>
-            <TouchableOpacity
-              style={styles.buttonAdd}
-              onPress={() => {
-                // Обробка натискання кнопки
-              }}
-            >
-              <AntDesign
-                name="pluscircleo"
-                size={24}
-                color="#FF6C00"
-              />
-            </TouchableOpacity>
+            {picture && (
+              <Image source={{ uri: picture }} style={styles.userPhoto} />
+            )}
+            {picture ? (
+              <TouchableOpacity
+                style={styles.buttonDeleteFoto}
+                onPress={() => setPicture("")}
+              >
+                <AntDesign name="close" size={24} color="#BDBDBD" />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity style={styles.buttonAdd} onPress={takePhoto}>
+                <AntDesign name="pluscircleo" size={24} color="#FF6C00" />
+              </TouchableOpacity>
+            )}
           </View>
+
           <View style={styles.formWrapper}>
             <Text style={styles.title}>Реєстрація</Text>
 
@@ -188,10 +233,7 @@ export default function RegistrationScreen() {
                 secureTextEntry={!showPassword}
               />
             </View>
-              <MainButton
-                text="Зареєстуватися"
-                onPress={handlePress}
-              />
+            <MainButton text="Зареєстуватися" onPress={handlePress} />
             <Text style={styles.navigate}>
               Вже є акаунт?{" "}
               <Text

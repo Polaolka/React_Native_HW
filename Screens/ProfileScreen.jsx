@@ -1,37 +1,118 @@
 import { Feather, AntDesign } from "@expo/vector-icons";
-
 import {
   ImageBackground,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  FlatList,
+  Image,
 } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
+import { selectUser } from "../redux/auth/selectors";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { db } from "../firebase/config";
+import { logOut } from "../redux/posts/authOperations";
+import * as Permissions from "expo-permissions";
+import { uploadPhotoToServer } from "../firebase/uploadPhotoToServer";
+import { launchCameraAsync, MediaTypeOptions } from "expo-image-picker";
+import { updateUser } from "../redux/auth/authOperations";
+import PostItem from "../Components/PostItem";
 
 export default function ProfileScreen({ navigation }) {
+  const dispatch = useDispatch();
+  const { avatar, login, userId } = useSelector(selectUser);
+  const [newPicture, setNewPicture] = useState("");
+  const [picture, setPicture] = useState(avatar || "");
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const q = query(collection(db, "posts"), where("ownerId", "==", userId));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const allPosts = [];
+      querySnapshot.forEach((post) => {
+        allPosts.push({ ...post.data(), postId: post.id });
+      });
+      setPosts(allPosts);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+  const signOut = () => {
+    dispatch(logOut());
+  };
+
+  const takePhoto = async () => {
+    try {
+      const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+      if (status !== "granted") {
+        return console.log("Permission not granted");
+      }
+      const { assets } = await launchCameraAsync();
+      if (!assets[0]?.uri) return;
+
+      setNewPicture(assets[0].uri);
+
+      const photoUrl = await uploadPhotoToServer(assets[0].uri);
+
+      dispatch(updateUser(photoUrl));
+      setNewPicture(photoUrl);
+    } catch (error) {
+      console.log("error takePhoto:", error);
+    }
+
+  };
+  const deletePhoto = () => {
+    setPicture("");
+    setNewPicture("");
+  };
+
   return (
     <ImageBackground
       source={require("../assets/Photo_BG.jpg")}
       style={styles.imageBgr}
     >
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => {}} style={styles.exitBtn}>
+        <TouchableOpacity onPress={signOut} style={styles.exitBtn}>
           <Feather name="log-out" size={24} color="#bdbdbd" />
         </TouchableOpacity>
-        <View style={styles.avatar}>
-          <Feather name="user" size={120} color="#bdbdbd" />
-          <TouchableOpacity style={styles.btnAdd} activeOpacity={1}>
-          <AntDesign
-                name="pluscircleo"
-                size={24}
-                color="#FF6C00"
-                style={styles.addIcon}
-              />
-          </TouchableOpacity>
+        <View style={styles.avatarThumb}>
+          {picture || newPicture ? (
+            <Image
+              source={picture ? { uri: avatar } : { uri: newPicture }}
+              style={styles.userPhoto}
+            ></Image>
+          ) : (
+            <Feather name="user" size={120} color="#bdbdbd" />
+          )}
+          {picture || newPicture ? (
+            <TouchableOpacity
+              style={styles.buttonDeleteFoto}
+              onPress={deletePhoto}
+            >
+              <AntDesign name="close" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.btnAdd} onPress={takePhoto}>
+              <AntDesign name="pluscircleo" size={24} color="#FF6C00" />
+            </TouchableOpacity>
+          )}
         </View>
-        <Text style={styles.login}>user name</Text>
+        <Text style={styles.login}>{login}</Text>
         <View>
-          <Text>posts</Text>
+          {posts.length ? (
+            <FlatList
+              data={posts}
+              keyExtractor={(item) => item.postId}
+              renderItem={(item) => (
+                <PostItem post={item} navigation={navigation} />
+              )}
+            />
+          ) : (
+            <Text></Text>
+          )}
         </View>
       </View>
     </ImageBackground>
@@ -54,7 +135,7 @@ export const styles = StyleSheet.create({
     top: 22,
     right: 16,
   },
-  avatar: {
+  avatarThumb: {
     position: "relative",
     borderRadius: 16,
     width: 120,
@@ -62,6 +143,13 @@ export const styles = StyleSheet.create({
     marginTop: -60,
     backgroundColor: "#F6F6F6",
     alignSelf: "center",
+  },
+  userPhoto: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+    alignSelf: "center",
+    borderRadius: 16,
   },
   btnAdd: {
     position: "absolute",
@@ -71,6 +159,15 @@ export const styles = StyleSheet.create({
     height: 25,
     backgroundColor: "#fff",
     borderWidth: 0,
+  },
+  buttonDeleteFoto: {
+    position: "absolute",
+    top: 81,
+    right: -12,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#E8E8E8",
   },
   login: {
     color: "#212121",

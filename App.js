@@ -5,6 +5,9 @@ import "react-native-gesture-handler";
 import React from "react";
 import FlashMessage from "react-native-flash-message";
 import { Layout } from "./Components/Layout";
+import { PersistGate } from "redux-persist/integration/react";
+import { Provider } from "react-redux";
+import { persistor, store } from './redux/store';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -16,10 +19,14 @@ export default function App() {
     return null;
   }
   return (
-    <NavigationContainer>
-      <Layout />
-      <FlashMessage position="top" />
-    </NavigationContainer>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <NavigationContainer>
+          <Layout />
+          <FlashMessage position="top" />
+        </NavigationContainer>
+      </PersistGate>
+    </Provider>
   );
 }
 

@@ -22,6 +22,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
     alignSelf: "center",
     zIndex: 10,
+    // overflow: "hidden",
   },
   title: {
     color: "#212121",
@@ -56,6 +57,13 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 78,
    },
+   userPhoto: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+    alignSelf: "center",
+    borderRadius: 16,
+   },
   buttonAdd: {
     position: "absolute",
     top: 81,
@@ -63,6 +71,14 @@ export const styles = StyleSheet.create({
     backgroundColor: "",
     borderRadius: 50,
     borderWidth: 0,
+  },
+  buttonDeleteFoto: {
+    position: "absolute",
+    top: 81,
+    right: -12,
+    backgroundColor: "#E8E8E8",
+    borderRadius: 50,
+    borderWidth: 1,
   },
   inputContainer: {
     position: "relative",

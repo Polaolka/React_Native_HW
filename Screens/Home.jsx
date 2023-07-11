@@ -5,6 +5,8 @@ import React from "react";
 import PostsScreen from "./PostsScreen";
 import CreatePostsScreen from "./CreatePostsScreen";
 import ProfileScreen from "./ProfileScreen";
+import { useDispatch } from "react-redux";
+import { logOut } from "../redux/posts/authOperations";
 
 const Tab = createBottomTabNavigator();
 
@@ -45,6 +47,10 @@ const screenOptions = ({ navigation, route }) => ({
 
 
 const Home = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const signOut = () => {
+    dispatch(logOut());
+  };
   return (
     <Tab.Navigator initialRouteName="Posts" screenOptions={screenOptions}>
       <Tab.Screen
@@ -65,7 +71,7 @@ const Home = ({ navigation }) => {
             <Feather name="grid" size={24} color={color} />
           ),
           headerRight: () => (
-            <TouchableOpacity onPress={() => {}} style={{ right: 16 }}>
+            <TouchableOpacity onPress={signOut} style={{ right: 16 }}>
               <Feather name="log-out" size={24} color="#BDBDBD" />
             </TouchableOpacity>
           ),
@@ -74,7 +80,6 @@ const Home = ({ navigation }) => {
       <Tab.Screen
         name="CreatePosts"
         component={CreatePostsScreen}
-        options={{ headerShown: false }}
       />
       <Tab.Screen
         name="Profile"

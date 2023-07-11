@@ -1,27 +1,55 @@
 import { createStackNavigator } from "@react-navigation/stack";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
 
-import PostsScreen from "../Screens/PostsScreen";
-import Home from "../Screens/Home";
+import CommentsScreen  from "../Screens/CommentsScreen";
+import HomeScreen from "../Screens/Home";
 import LoginScreen from "../Screens/LoginScreen";
+import MapScreen from "../Screens/MapScreen";
 import RegistrationScreen from "../Screens/RegistrationScreen";
-import CreatePostsScreen from "../Screens/CreatePostsScreen";
-import ProfileScreen from "../Screens/ProfileScreen";
-import CommentsScreen from "../Screens/CommentsScreen";
-import MapScreen from "../Screens/MapScreen"
 
-const MainStack = createStackNavigator();
+import { auth } from "../firebase/config";
+import { getCurrentUser } from "../redux/auth/authSlice";
+
+const AuthStack = createStackNavigator();
+const Main = createStackNavigator();
 
 export const Layout = () => {
-  return (
-    <MainStack.Navigator>
-      <MainStack.Screen name="Register" component={RegistrationScreen} options={{ headerShown: false }}/>
-      <MainStack.Screen name="CreatePosts" component={CreatePostsScreen} options={{ headerShown: false }}/>
-      <MainStack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }}/>
-      <MainStack.Screen name="Posts" component={PostsScreen} options={{ headerShown: false }}/>
-      <MainStack.Screen name="Home" component={Home}  options={{ headerShown: false }}/>
-      <MainStack.Screen name="User" component={ProfileScreen}  options={{ headerShown: false }}/>
-      <MainStack.Screen name="Comments" component={CommentsScreen} />
-      <MainStack.Screen name="Map" component={MapScreen} />
-    </MainStack.Navigator>
+  const { isAuth } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userInfo = {
+          userId: user.uid,
+          login: user.displayName,
+          email: user.email,
+          avatar: user.photoURL,
+        };
+        dispatch(getCurrentUser(userInfo));
+      }
+    });
+  }, []);
+
+  return isAuth ? (
+    <Main.Navigator>
+      <Main.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
+      <Main.Screen name="Map" component={MapScreen} />
+      <Main.Screen name="Comments" component={CommentsScreen} />
+    </Main.Navigator>
+  ) : (
+    <AuthStack.Navigator
+      initialRouteName="Login"
+      screenOptions={{ headerShown: false }}
+    >
+      <AuthStack.Screen name="Registration" component={RegistrationScreen} />
+      <AuthStack.Screen name="Login" component={LoginScreen} />
+    </AuthStack.Navigator>
   );
 };
